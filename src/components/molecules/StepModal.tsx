@@ -1,5 +1,5 @@
-import React from 'react';
-import { BadgeIcon } from "../atoms/icons";
+import React, { useState } from 'react';
+import { StarIcon } from '../atoms/icons';
 
 interface ModalProps {
     isOpen: boolean;
@@ -10,6 +10,18 @@ interface ModalProps {
     onConfirm: () => void;
 }
 
+interface BadgeOption {
+    id: string;
+    label: string;
+}
+
+const BADGE_OPTIONS: BadgeOption[] = [
+    { id: 'stellar', label: 'Stellar' },
+    { id: 'soroban', label: 'Soroban' },
+    { id: 'blockful', label: 'Blockful' },
+    { id: 'custom', label: 'Custom' }
+];
+
 export const StepModal: React.FC<ModalProps> = ({
     isOpen,
     onClose,
@@ -18,6 +30,9 @@ export const StepModal: React.FC<ModalProps> = ({
     onBack,
     onConfirm,
 }) => {
+    const [selectedAvatar, setSelectedAvatar] = useState<string>('');
+    const [selectedBadge, setSelectedBadge] = useState<string>('');
+
     const renderStep = () => {
         switch (currentStep) {
             case 1:
@@ -27,21 +42,57 @@ export const StepModal: React.FC<ModalProps> = ({
                             <label className="block text-sm mb-2">Name</label>
                             <input
                                 type="text"
-                                className="w-full bg-gray-700 rounded-lg p-2"
+                                className="w-full bg-gray-700 rounded-lg p-2 bg-whiteOpacity008"
                             />
                         </div>
                         <div>
                             <label className="block text-sm mb-2">Description</label>
                             <textarea
-                                className="w-full bg-gray-700 rounded-lg p-2"
+                                className="w-full bg-gray-700 rounded-lg p-2 bg-whiteOpacity008"
                                 rows={4}
                             />
                             <div className="text-right text-sm text-gray-400">0/120</div>
                         </div>
                         <div>
                             <label className="block text-sm mb-2">Avatar</label>
+                            <div className="grid grid-cols-5 gap-4">
+                                {[
+                                    { icon: <StarIcon />, id: 'star' },
+                                    { icon: <StarIcon />, id: 'trophy' },
+                                    { icon: <StarIcon />, id: 'key' },
+                                    { icon: <StarIcon />, id: 'heart' },
+                                    { icon: <StarIcon />, id: 'diamond' },
+                                    { icon: <StarIcon />, id: 'cake' },
+                                    { icon: <StarIcon />, id: 'building' },
+                                    { icon: <StarIcon />, id: 'medal' },
+                                    { icon: <StarIcon />, id: 'user' },
+                                    { icon: <StarIcon />, id: 'github' }
+                                ].map(({ icon, id }) => (
+                                    <button
+                                        key={id}
+                                        onClick={() => setSelectedAvatar(id)}
+                                        className={`p-3 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors ${selectedAvatar === id ? 'ring-2 ring-green-500' : ''
+                                            }`}
+                                    >
+                                        {icon}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm mb-2">Badges</label>
                             <div className="flex gap-2">
-                                {/* icons */}
+                                {BADGE_OPTIONS.map(({ id, label }) => (
+                                    <button
+                                        key={id}
+                                        onClick={() => setSelectedBadge(id)}
+                                        className={`p-2 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors ${selectedBadge === id ? 'bg-gray-700' : ''
+                                            }`}
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -89,8 +140,8 @@ export const StepModal: React.FC<ModalProps> = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-brandBlack rounded-lg p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+            <div className="bg-grey02 rounded-lg p-6 w-full max-w-md z-50 relative">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl">Create community</h2>
                     <button onClick={onClose}>
