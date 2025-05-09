@@ -370,7 +370,7 @@ export const StepModal: React.FC<ModalProps> = ({
         badgeType => {
           const badgeIdVector = xdr.ScVal.scvVec([
             xdr.ScVal.scvString(badgeType.name),
-            new Address(pubkey).toScVal(),
+            new Address(badgeType.issuer.toUpperCase()).toScVal(),
           ]);
           return new xdr.ScMapEntry({
             key: badgeIdVector,
