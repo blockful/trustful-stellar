@@ -345,6 +345,8 @@ export const StepModal: React.FC<ModalProps> = ({
         return;
       }
 
+      const sortedBadges = filteredBadges.sort((a, b) => a.name.localeCompare(b.name));
+
       const { pubkey } = await albedo.publicKey({
         require_existing: true,
       }); //Todo-user logged
@@ -366,11 +368,11 @@ export const StepModal: React.FC<ModalProps> = ({
       const saltScVal = xdr.ScVal.scvBytes(saltBuffer);
       const adminAddressScVal = new Address(pubkey).toScVal();
 
-      const badgeMapEntries: xdr.ScMapEntry[] = filteredBadges.map(
+      const badgeMapEntries: xdr.ScMapEntry[] = sortedBadges.map(
         badgeType => {
           const badgeIdVector = xdr.ScVal.scvVec([
             xdr.ScVal.scvString(badgeType.name),
-            new Address(pubkey).toScVal(),
+            new Address(badgeType.issuer.toUpperCase()).toScVal(),
           ]);
           return new xdr.ScMapEntry({
             key: badgeIdVector,
